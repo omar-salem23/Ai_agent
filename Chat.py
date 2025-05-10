@@ -20,28 +20,9 @@ df["transaction_date"] = pd.to_datetime(df["transaction_date"], format="%d/%m/%Y
 conn = sqlite3.connect("transactions.db")
 df.to_sql("transactions", conn, if_exists="replace", index=False)
 
-# ===== التحقق من المعاملات الفاشلة اليوم =====
-today = datetime.now().date()
-failed_today = df[
-    (df["transaction_status"] == "Failed") &
-    (df["transaction_date"].dt.date == today)
-]
-
-# ===== إرسال تنبيه إذا لزم الأمر =====
-# def send_telegram_message(message):
-#     BOT_TOKEN = 'YOUR_BOT_TOKEN'  # ← استبدلها
-#     CHAT_ID = 'YOUR_CHAT_ID'      # ← استبدلها
-#     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-#     payload = {'chat_id': CHAT_ID, 'text': message}
-#     requests.post(url, data=payload)
-
-# if len(failed_today) > 5:
-#     alert_message = f"🚨 Alert: {len(failed_today)} failed transactions today!"
-#     st.error(alert_message)
-#     send_telegram_message(alert_message)
 
 # ===== واجهة Streamlit =====
-st.title("💬 Gemini SQL Agent")
+st.title("💬  SQL Agent")
 
 # ===== إدخال صوتي =====
 st.markdown("### 🎙️ أدخل سؤالك بالصوت:")
@@ -55,8 +36,8 @@ if st.button("اضغط للتسجيل"):
         st.success("✅ تم التسجيل، جاري التحويل إلى نص...")
 
     try:
-        voice_query = recognizer.recognize_google(audio, language="ar-JO")
-        st.text_area("📝 النص المُتعرف عليه:", voice_query, height=100)
+        voice_query = recognizer.recognize_google(audio, language="en-US") #عشان بدي استخدم لغة عربيه بقدر اعدله ل انجليزي
+        st.text_area("📝 النص المُتعرف عليه:", voice_query, height=100)# هاض البوكس تاع الفةيس
     except Exception as e:
         st.error(f"❌ خطأ في التعرف على الصوت: {e}")
 
